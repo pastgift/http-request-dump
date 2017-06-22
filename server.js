@@ -42,7 +42,7 @@ http.createServer(function(req, res) {
     var parts = chunk.split(sep);
     for (var i = 0; i < parts.length; i++) {
       // parts[i] = (new Buffer(parts[i])).toString('base64');
-      parts[i] = (new Buffer(parts[i])).length + ' Bytes';
+      // parts[i] = (new Buffer(parts[i])).length + ' Bytes';
     }
 
     chunk = parts.join('\n' + sep + '\n');
