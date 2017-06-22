@@ -33,7 +33,7 @@ app.use(
       var v = req.headers[k];
       console.log(k + ': ' + req.headers[k]);
     }
-    console.log('='.repeat(50));
+    console.log('-'.repeat(50));
 
     return next();
   },
@@ -44,6 +44,8 @@ app.use(
         error  : 400,
         message: 'No file uploaded.'
       }
+      console.log(JSON.stringify(ret));
+      console.log('='.repeat(50));
 
       return res.status(400).send(ret);
 
@@ -52,6 +54,8 @@ app.use(
         error  : 200,
         message: 'File uploaded: ' + req.files[0].originalname,
       }
+      console.log(JSON.stringify(ret));
+    callbackonsole.log('='.repeat(50));
 
       return res.status(200).send(ret);
     }
