@@ -8,22 +8,46 @@ var DUMP_FILE_PATH = 'dump.txt';
 http.createServer(function(req, res) {
   var dumpRows = [];
   var reqData  = [];
+  var boundary = '';
 
   dumpRows.push('='.repeat(50));
   dumpRows.push((new Date()).toString());
   dumpRows.push('-'.repeat(50));
   dumpRows.push(req.method.toUpperCase() + ' ' + req.url);
 
+  for (var k in req.headers) {
+    var v = req.headers[k];
+
+    dumpRows.push(k + ': ' + req.headers[k]);
+
+    if (k.toLowerCase() === 'content-type') {
+      var opts = v.split(';');
+      for (var i = 0; i < opts.length; i++) {
+        var detail = opts[i].trim().split('=');
+        if (detail[0].toLowerCase() === 'boundary') {
+          boundary = detail[1];
+        }
+      }
+    }
+  }
+
   req.on('data', function(d) {
     reqData.push(d);
   });
 
   req.on('end', function(d) {
-    for (var k in req.headers) {
-      dumpRows.push(k + ': ' + req.headers[k]);
+    var chunk = reqData.join('');
+
+    var sep = '--' + boundary;
+    var parts = chunk.split(sep);
+    console.log(parts.length)
+    for (var i = 0; i < parts.length; i++) {
+      parts[i] = (new Buffer(parts[i])).toString('base64');
     }
 
-    dumpRows.push(reqData.join(''));
+    chunk = parts.join('\n' + sep + '\n');
+
+    dumpRows.push(chunk);
     dumpRows.push('='.repeat(50) + '\n');
 
     res.writeHead(200, {
