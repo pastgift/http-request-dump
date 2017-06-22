@@ -41,7 +41,8 @@ http.createServer(function(req, res) {
     var sep = '--' + boundary;
     var parts = chunk.split(sep);
     for (var i = 0; i < parts.length; i++) {
-      parts[i] = (new Buffer(parts[i])).toString('base64');
+      // parts[i] = (new Buffer(parts[i])).toString('base64');
+      parts[i] = (new Buffer(parts[i])).length + ' Bytes';
     }
 
     chunk = parts.join('\n' + sep + '\n');
@@ -49,21 +50,22 @@ http.createServer(function(req, res) {
     dumpRows.push(chunk);
     dumpRows.push('='.repeat(50) + '\n');
 
-    res.writeHead(400, {
-      'Content-Type': 'application/json',
-    });
+    setTimeout(function() {
+      res.writeHead(400, {
+        'Content-Type': 'application/json',
+      });
 
-    res.end(JSON.stringify({
-      error  : 400,
-      message: 'HTTP Dump',
-    }));
+      res.end(JSON.stringify({
+        error  : 400,
+        message: 'HTTP Dump',
+      }));
 
-    var dump = dumpRows.join('\n');
-    console.log(dump);
-    fs.appendFile(DUMP_FILE_PATH, dump, function(err) {
-      console.log('End of request');
-    });
-
+      var dump = dumpRows.join('\n');
+      console.log(dump);
+      fs.appendFile(DUMP_FILE_PATH, dump, function(err) {
+        console.log('End of request');
+      });
+    }, 2000);
   });
 })
 .listen(8888);
