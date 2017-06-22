@@ -1,1 +1,5 @@
+node_modules/
+upload-tmp/
+
 dump.txt
+dump.txt.*
