@@ -7,6 +7,7 @@ var UPLOAD_TEMP_FOLDER = 'upload-tmp';
 
 var express = require('express')
 var app = express();
+var is = require('type-is');
 
 var storage = multer.diskStorage({
   destination: function(req, file, callback) {
@@ -26,6 +27,7 @@ app.use(
   function (req, res, next) {
     console.log('='.repeat(50));
     console.log((new Date()).toString());
+    console.log((is(req, ['multipart'])) ? 'Is multipart': 'not multipart');
     console.log('-'.repeat(50));
     console.log(req.method.toUpperCase() + ' ' + req.url);
 
