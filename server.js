@@ -40,7 +40,6 @@ http.createServer(function(req, res) {
 
     var sep = '--' + boundary;
     var parts = chunk.split(sep);
-    console.log(parts.length)
     for (var i = 0; i < parts.length; i++) {
       parts[i] = (new Buffer(parts[i])).toString('base64');
     }
@@ -50,12 +49,12 @@ http.createServer(function(req, res) {
     dumpRows.push(chunk);
     dumpRows.push('='.repeat(50) + '\n');
 
-    res.writeHead(200, {
+    res.writeHead(400, {
       'Content-Type': 'application/json',
     });
 
     res.end(JSON.stringify({
-      error  : 200,
+      error  : 400,
       message: 'HTTP Dump',
     }));
 
